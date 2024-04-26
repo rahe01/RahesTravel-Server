@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion , ObjectId} = require('mongodb');
 require('dotenv').config()
 const app = express();
 const cors = require('cors');
@@ -11,7 +11,7 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.ncq0h0t.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -30,6 +30,19 @@ async function run() {
         console.log(result)
     })
 
+    app.post('/addCountry', async (req, res) => {
+        const country = req.body;
+        const result = await client.db("TouristDB").collection("country").insertOne(country);
+        res.send(result)
+        console.log(result)
+    })
+
+    app.get('/countryyy', async (req, res) => {
+        const cursor = client.db("TouristDB").collection("country").find();
+        const result = await cursor.toArray();
+        res.send(result)
+    })
+
     app.get('/touristSports', async (req, res) => {
         const cursor = client.db("TouristDB").collection("tourist").find();
         const result = await cursor.toArray();
@@ -42,6 +55,14 @@ async function run() {
       const productCollection = client.db("TouristDB").collection("tourist");
       const result = await productCollection.find({ email: req.params.email }).toArray();
       res.send(result)
+    })
+
+    app.get("/tourist/:id" , async (req, res) => {
+      const id = req.params.id;
+      const query = {_id: new ObjectId(id)}
+      const result = await client.db("TouristDB").collection("tourist").findOne(query);
+      res.send(result)
+
     })
 
 
