@@ -65,6 +65,22 @@ async function run() {
 
     })
 
+    app.put("/touristsss/:id" , async (req, res) => {
+      const id = req.params.id;
+      const filter = {_id: new ObjectId(id)}
+      const updateDoc = { $set: req.body }
+      const result = await client.db("TouristDB").collection("tourist").updateOne(filter, updateDoc);
+      res.send(result)
+    })
+
+    app.delete("/delete/:id" , async (req, res) => {
+
+      const result = await client.db("TouristDB").collection("tourist").deleteOne({_id: new ObjectId(req.params.id)})
+
+      res.send(result)
+      
+    })
+
 
 
 
