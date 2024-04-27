@@ -81,6 +81,18 @@ async function run() {
       
     })
 
+    app.get('/sortTourist', async (req, res) => {
+      try {
+          // Fetch tourist data from the database and sort by average cost
+          const result = await client.db("TouristDB").collection("tourist").find().sort({ averageCost: 1 }).toArray();
+          res.send(result);
+      } catch (error) {
+          console.error("Error fetching and sorting tourist data:", error);
+          res.status(500).send("Internal Server Error");
+      }
+  });
+  
+
 
 
 
