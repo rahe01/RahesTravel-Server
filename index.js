@@ -93,6 +93,19 @@ async function run() {
   });
   
 
+  app.get('/countryyyy/:countryName', async (req, res) => {
+    try {
+        const countryName = req.params.countryName;
+        const result = await client.db("TouristDB").collection("tourist").find({ country_Name: countryName }).toArray();
+        res.send(result);
+        console.log(result)
+    } catch (error) {
+        console.error("Error fetching country data:", error);
+        res.status(500).send("Internal Server Error");
+    }
+
+   
+});
 
 
 
